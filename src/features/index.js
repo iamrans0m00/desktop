@@ -15,6 +15,7 @@ const OAuth = require('./oauth').getInstance()
 const Logging = require('./logging').getInstance()
 const DirectConnect = require('./direct-connect').getInstance()
 const Crypto = require('./crypto').getInstance()
+const RoadFeel = require('./road-feel').getInstance()
 const {ObserverHandler} = require('./utils/observer')
 
 function initFeaturesApp( props ) {
@@ -38,6 +39,7 @@ function initFeaturesApp( props ) {
     Logging.register(props);
     DirectConnect.register(props);
     Crypto.register(props);
+    RoadFeel.register(props);
 
 }
 
@@ -75,6 +77,7 @@ function initFeaturesWeb( electron,ipcRenderer) {
     Crypto.registerRenderer(electron,ipcRenderer);
     Logging.registerRenderer(electron,ipcRenderer);
     DirectConnect.registerRenderer(electron,ipcRenderer);
+    RoadFeel.registerRenderer(electron,ipcRenderer);
 
 
     electron.skipInstallUpdate = ()=> {

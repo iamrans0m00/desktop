@@ -43,9 +43,37 @@ class IncyclistApp
         
         app.incyclistApp = this
         app.allowRendererProcessReuse=false;  
-        if (process.platform==='darwin') {
-            Menu.setApplicationMenu(null);
+        // Set up custom menu with User > Settings
+        const isMac = process.platform === 'darwin';
+        const userMenu = {
+            label: 'User',
+            submenu: [
+                {
+                    label: 'Settings',
+                    click: () => {
+                        const { BrowserWindow } = require('electron');
+                        const settingsPath = path.join(__dirname, './public/settings.html');
+                        const win = new BrowserWindow({
+                            width: 400,
+                            height: 300,
+                            title: 'Settings',
+                            webPreferences: {
+                                nodeIntegration: true,
+                                contextIsolation: false,
+                                preload: path.join(__dirname, './web/preload.js')
+                            }
+                        });
+                        win.loadFile(settingsPath);
+                    }
+                }
+            ]
+        };
+        const template = [userMenu];
+        if (isMac) {
+            // Add empty app menu for macOS
+            template.unshift({ label: app.name, submenu: [] });
         }
+        Menu.setApplicationMenu(Menu.buildFromTemplate(template));
         if (process.platform==='linux' && !process.env.DEBUG && !process.env.LOADER_DEBUG && this.environment==='prod')  {
             app.commandLine.appendSwitch('no-sandbox');            
         }

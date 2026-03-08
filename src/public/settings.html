@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; background: #1a1a1a; color: #e0e0e0; }
+        h1 { color: #fff; margin-bottom: 1.2em; }
+        h2 { color: #aaa; font-size: 1em; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.6em; }
+        .section { margin-bottom: 2em; padding: 1em 1.2em; background: #252525; border-radius: 6px; }
+        .row { display: flex; align-items: center; margin-bottom: 0.7em; }
+        .row label { width: 160px; color: #bbb; flex-shrink: 0; }
+        select, input[type=range] { background: #333; color: #e0e0e0; border: 1px solid #555;
+                                     border-radius: 4px; padding: 4px 8px; }
+        select:focus, input:focus { outline: 1px solid #4a9eff; }
+        .intensity-val { margin-left: 0.6em; min-width: 3em; }
+        /* mode toggle */
+        .toggle-group { display: flex; gap: 0; }
+        .toggle-group button {
+            padding: 5px 16px; border: 1px solid #555; background: #333; color: #aaa;
+            cursor: pointer; font-size: 0.9em;
+        }
+        .toggle-group button:first-child { border-radius: 4px 0 0 4px; }
+        .toggle-group button:last-child  { border-radius: 0 4px 4px 0; border-left: none; }
+        .toggle-group button.active { background: #4a9eff; color: #fff; border-color: #4a9eff; }
+        .hint { font-size: 0.8em; color: #777; margin-top: 0.3em; }
+        #surface-row { transition: opacity 0.2s; }
+        button#save-btn {
+            margin-top: 0.5em; padding: 8px 28px; background: #4a9eff; color: #fff;
+            border: none; border-radius: 4px; font-size: 1em; cursor: pointer;
+        }
+        button#save-btn:hover { background: #357cd6; }
+        #status { margin-top: 0.8em; color: #6be06b; font-size: 0.9em; min-height: 1.2em; }
+    </style>
+</head>
+<body>
+    <h1>Settings</h1>
+
+    <!-- ── Units ─────────────────────────────────────── -->
+    <div class="section">
+        <h2>Units</h2>
+        <div class="row">
+            <label for="units">Display units:</label>
+            <select id="units">
+                <option value="metric">Metric (km, m, kph)</option>
+                <option value="imperial">US / Imperial (mi, ft, mph)</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ── Road Feel ──────────────────────────────────── -->
+    <div class="section">
+        <h2>Road Feel (Tacx Neo)</h2>
+
+        <!-- Mode -->
+        <div class="row">
+            <label>Mode:</label>
+            <div class="toggle-group">
+                <button id="mode-auto"  class="active" onclick="setMode('auto')">Auto</button>
+                <button id="mode-manual"               onclick="setMode('manual')">Manual</button>
+            </div>
+        </div>
+        <div class="hint" id="mode-hint">
+            Auto: uses companion .surfaces.csv file, then OSM map data, then the fallback surface below.
+        </div>
+
+        <!-- Surface (fallback in auto, fixed in manual) -->
+        <div class="row" id="surface-row" style="margin-top:0.8em">
+            <label id="surface-label">Fallback surface:</label>
+            <select id="surface">
+                <option value="Road">Road (asphalt)</option>
+                <option value="CobblestoneHard">Cobblestone – hard</option>
+                <option value="CobblestoneEasy">Cobblestone – easy</option>
+                <option value="BrickRoad">Brick road</option>
+                <option value="Gravel">Gravel</option>
+                <option value="GravelLight">Gravel – light</option>
+                <option value="GravelDeep">Gravel – deep</option>
+                <option value="WoodenPlanks">Wooden planks</option>
+                <option value="Ice">Ice</option>
+                <option value="Snow">Snow</option>
+                <option value="Off">Off (no road feel)</option>
+            </select>
+        </div>
+
+        <!-- Intensity -->
+        <div class="row" style="margin-top:0.5em">
+            <label for="intensity">Intensity:</label>
+            <input type="range" id="intensity" min="0" max="100" step="5" value="100"
+                   oninput="document.getElementById('intensity-val').innerText = this.value + '%'">
+            <span class="intensity-val" id="intensity-val">100%</span>
+        </div>
+    </div>
+
+    <button id="save-btn" onclick="saveSettings()">Save</button>
+    <div id="status"></div>
+
+    <script src="settings.js"></script>
+</body>
+</html>
